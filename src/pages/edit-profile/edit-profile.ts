@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController, ToastController, NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Storage } from '@ionic/storage'
 import { CurrentUser } from '../../providers/current-user'
 import { User } from '../../models/user'
 
@@ -22,7 +22,8 @@ export class EditProfile {
     public formBuilder: FormBuilder, 
     public alertCtrl: AlertController, 
     public toastCtrl: ToastController, 
-    private menu: MenuController) {
+    private menu: MenuController, 
+    private storage: Storage) {
     this.menu.enable(true, 'side_menu');
 
     this.user = this.currUser.getUser();
@@ -39,14 +40,20 @@ export class EditProfile {
       // POST edit
       // Success
       this.user.name = this.edit.value.name;
+
+      // Save to local storage
+      this.storage.set('user_login', this.user.nusp);
+      this.storage.set('user_type', this.user.is_student);
+        
+      // Current user
       this.currUser.setUser(this.user);
       console.log(this.user);
 
       let alert = this.alertCtrl.create({
-              title: 'Success',
-              subTitle: 'Your profile was successfully edited.',
-              buttons: ['OK']
-            });
+        title: 'Success',
+        subTitle: 'Your profile was successfully edited.',
+        buttons: ['OK']
+      });
           alert.present();
     }
     else {

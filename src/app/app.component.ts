@@ -6,6 +6,7 @@ import { Login } from '../pages/login/login';
 import { SeminarList} from '../pages/seminar-list/seminar-list';
 import { EditProfile } from '../pages/edit-profile/edit-profile';
 
+import { Storage } from '@ionic/storage'
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -23,7 +24,8 @@ export class MyApp {
     public platform: Platform,
     public menu: MenuController,
     public statusBar: StatusBar,
-    public splashScreen: SplashScreen
+    public splashScreen: SplashScreen,
+    public storage: Storage
   ) {
     this.initializeApp();
 
@@ -51,6 +53,9 @@ export class MyApp {
   }
 
   logOut() {
+    // Clear local storage
+    this.storage.remove('user_login');
+    this.storage.remove('user_type');
     this.nav.setRoot(this.rootPage);
   }
 }

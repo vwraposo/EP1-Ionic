@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MenuController, ToastController, ViewController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Storage } from '@ionic/storage';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -32,7 +33,8 @@ export class Signup {
     public formBuilder: FormBuilder,
     public currUser: CurrentUser,
     public toastCtrl: ToastController,
-    private menu: MenuController) {
+    private menu: MenuController, 
+    private storage: Storage) {
     this.menu.enable(false, 'side_menu');
 
     this.signup = formBuilder.group({
@@ -53,6 +55,12 @@ export class Signup {
       this.user = new User (this.signup.value.login,
         this.signup.value.name, this.signup.value.u_type == "S");
 
+
+      // Save to local storage
+      this.storage.set('user_login', this.user.nusp);
+      this.storage.set('user_type', this.user.is_student);
+
+      // Current user
       this.currUser.setUser(this.user);
       console.log(this.user);
 

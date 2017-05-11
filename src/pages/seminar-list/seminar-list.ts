@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { MenuController, AlertController, NavController, NavParams } from 'ionic-angular';
-import { Storage } from '@ionic/storage'
 
 import { SeminarPage } from '../seminar-page/seminar-page'
 import { Seminar } from '../../models/seminar'
