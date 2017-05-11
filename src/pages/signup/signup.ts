@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ToastController, ViewController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { MenuController, ToastController, ViewController, IonicPage, NavController, NavParams } from 'ionic-angular';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 
@@ -25,8 +25,16 @@ export class Signup {
   signup: FormGroup;
   submitAttempt: boolean = false;
 
-  constructor(public navCtrl: NavController, public viewCtrl: ViewController, public navParams: NavParams, 
-    public formBuilder: FormBuilder, public currUser: CurrentUser, public toastCtrl: ToastController) {
+  constructor(
+    public navCtrl: NavController,
+    public viewCtrl: ViewController,
+    public navParams: NavParams, 
+    public formBuilder: FormBuilder,
+    public currUser: CurrentUser,
+    public toastCtrl: ToastController,
+    private menu: MenuController) {
+    this.menu.enable(false, 'side_menu');
+
     this.signup = formBuilder.group({
       name: [''],
       login: [''],

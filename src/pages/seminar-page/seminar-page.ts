@@ -21,8 +21,14 @@ export class SeminarPage {
   students: Array<User>;
   clicked: Boolean;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
-    public currUser: CurrentUser, private barcodeScanner: BarcodeScanner, public http: Http, public toastCtrl: ToastController) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams, 
+    public currUser: CurrentUser,
+    private barcodeScanner: BarcodeScanner,
+    public http: Http,
+    public toastCtrl: ToastController) {
+
     this.selectedSeminar = navParams.get('seminar');
     this.user = currUser.getUser();
 

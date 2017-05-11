@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, NavController, NavParams } from 'ionic-angular';
+import { MenuController, AlertController, NavController, NavParams } from 'ionic-angular';
 import { Storage } from '@ionic/storage'
 
 import { SeminarPage } from '../seminar-page/seminar-page'
@@ -17,8 +17,14 @@ export class SeminarList {
   user: User;
   user_id: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, 
-    public currUser: CurrentUser, public alertCtrl: AlertController) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams, 
+    public currUser: CurrentUser,
+    public alertCtrl: AlertController,
+    private menu: MenuController) {
+    this.menu.enable(true, 'side_menu');
+    
     this.user = this.currUser.getUser();
     console.log(this.user);
 

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ToastController, NavController, NavParams } from 'ionic-angular';
+import { MenuController, AlertController, ToastController, NavController, NavParams } from 'ionic-angular';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Storage } from '@ionic/storage'
@@ -15,8 +15,16 @@ export class EditProfile {
   edit: FormGroup;
   submitAttempt: boolean = false;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, public currUser: CurrentUser, public formBuilder: FormBuilder, 
-    public alertCtrl: AlertController, public toastCtrl: ToastController) {
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams, 
+    public currUser: CurrentUser, 
+    public formBuilder: FormBuilder, 
+    public alertCtrl: AlertController, 
+    public toastCtrl: ToastController, 
+    private menu: MenuController) {
+    this.menu.enable(true, 'side_menu');
+
     this.user = this.currUser.getUser();
     console.log(this.user);
 
