@@ -1,0 +1,36 @@
+<ion-header>
+
+  <ion-navbar>
+    <button menuToggle *ngIf="!selectedSeminar">
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>Seminar Details</ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <h3 text-center *ngIf="selectedSeminar">
+    {{selectedSeminar.name}}
+  </h3>
+
+  <button ion-button *ngIf="user.is_student" color="secondary" outline (click)="scanQR()">QR Code</button>
+  <br />
+  <button ion-button *ngIf="user.is_student" color="secondary" outline>Outro Metodo</button>
+  <br />
+  <button ion-button *ngIf="!user.is_student" color="primary" outline (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()">QR Code</button>
+  <br />
+  <div align="center" *ngIf="clicked" >
+    <qr-code [value]="''+selectedSeminar.id" [size]="150"></qr-code>
+  </div>
+  <br />
+  <button ion-button *ngIf="!user.is_student" color="danger" outline>Delete</button>
+
+  <ion-list *ngIf="!user.is_student">
+    <a ion-item *ngFor="let student of students">
+      {{student.id}} 
+    </a>
+  </ion-list>
+
+</ion-content>
