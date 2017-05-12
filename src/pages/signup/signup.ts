@@ -53,7 +53,7 @@ export class Signup {
       this.signup.value.u_type != '') {
 
       this.user = new User (this.signup.value.login,
-        this.signup.value.name, this.signup.value.u_type == "S");
+        this.signup.value.u_type == "S");
 
 
       // Save to local storage

@@ -76,6 +76,7 @@ export class Login {
   }
 
   save () {
+    console.log("save clicked");
     if (
       this.login.value.login    != '' && 
       this.login.value.password != '' && 
@@ -94,7 +95,6 @@ export class Login {
 
       let myHeaders = new Headers();
       myHeaders.append('content-type','application/json');
-      myHeaders.append('Access-Control-Allow-Origin','*');
 
       let options = new RequestOptions({headers: myHeaders});
 
