@@ -92,46 +92,47 @@ export class Login {
       console.log("Target: "+url);
 
       let myHeaders = new Headers();
-      myHeaders.append('content-type','application/json');
+      myHeaders.append('Content-Type','application/json');
 
       let options = new RequestOptions({headers: myHeaders});
 
-      let body = new FormData();
-      body.append('nusp',nusp);
-      body.append('pass',pass);
+      let body = JSON.stringify({
+        nusp: nusp, 
+        pass: pass,
+      });
 
       console.log(''+body);
 
       this.http.post(url,body,options).map(res => res.json()).subscribe( data => {
-          console.log('Success: '+ data.success);
+        console.log('Success: '+ data.success);
 
-          if (!data.success) {
-          
-            this.user = new User (nusp, stud);
+        if (!data.success) {
 
-            // Salva no Storage
-            this.storage.set('user_login', nusp);
-            this.storage.set('user_type', stud);
+          this.user = new User (nusp, stud);
 
-            // Usuario atual
-            this.currUser.setUser(this.user);
-            console.log (this.user);
+          // Salva no Storage
+          this.storage.set('user_login', nusp);
+          this.storage.set('user_type', stud);
+
+          // Usuario atual
+          this.currUser.setUser(this.user);
+          console.log (this.user);
 
 
-            this.navCtrl.push(SeminarList).
-                then(() => {
-                    const index = this.viewCtrl.index;
-                    this.navCtrl.remove(index);
-                });
-            } else {
-                console.log("invalid username/password");
-                this.toastCtrl.create({
-                    message: 'Log in failed - invalid username/password',
-                    duration: 3000
-                }).present();
-            }
+          this.navCtrl.push(SeminarList).
+            then(() => {
+              const index = this.viewCtrl.index;
+              this.navCtrl.remove(index);
+            });
+        } else {
+          console.log("invalid username/password");
+          this.toastCtrl.create({
+            message: 'Log in failed - invalid username/password',
+            duration: 3000
+          }).present();
+        }
 
-        },
+      },
         err => {
           console.log("Request failure");
           let toast = this.toastCtrl.create({
@@ -162,6 +163,6 @@ export class Login {
       });
   }
 
-  
+
 
 }
