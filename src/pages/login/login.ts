@@ -51,7 +51,7 @@ export class Login {
         this.storage.get('user_type').then((u_type) => {
 
           this.user = new User (u_login,
-            "Nome Hardcoded", u_type);
+            u_type);
 
           this.currUser.setUser(this.user);
           console.log (this.user);
@@ -96,31 +96,40 @@ export class Login {
 
       let options = new RequestOptions({headers: myHeaders});
 
-      let data = JSON.stringify({
-        name: name,
-        nusp: nusp,
-        pass: pass
-      });
+      let body = new FormData();
+      body.append('nusp',nusp);
+      body.append('pass',pass);
 
-      this.http.post(url,data,options).map(res => res.json()).subscribe(
-        data => {
+      console.log(''+body);
+
+      this.http.post(url,body,options).map(res => res.json()).subscribe( data => {
           console.log('Success: '+ data.success);
-          this.user = new User (nusp, stud);
 
-          // Salva no Storage
-          this.storage.set('user_login', nusp);
-          this.storage.set('user_type', stud);
+          if (!data.success) {
+          
+            this.user = new User (nusp, stud);
 
-          // Usuario atual
-          this.currUser.setUser(this.user);
-          console.log (this.user);
+            // Salva no Storage
+            this.storage.set('user_login', nusp);
+            this.storage.set('user_type', stud);
+
+            // Usuario atual
+            this.currUser.setUser(this.user);
+            console.log (this.user);
 
 
-          this.navCtrl.push(SeminarList).
-            then(() => {
-              const index = this.viewCtrl.index;
-              this.navCtrl.remove(index);
-            });
+            this.navCtrl.push(SeminarList).
+                then(() => {
+                    const index = this.viewCtrl.index;
+                    this.navCtrl.remove(index);
+                });
+            } else {
+                console.log("invalid username/password");
+                this.toastCtrl.create({
+                    message: 'Log in failed - invalid username/password',
+                    duration: 3000
+                }).present();
+            }
 
         },
         err => {
