@@ -35,7 +35,7 @@ export class SeminarPage {
     // POST lista de alunos
     this.students = [];
     for(let i = 1; i < 10; i++) {
-      this.students.push(new User("" + i, "Nome", true));
+      this.students.push(new User("" + i, true));
     }
   }
 

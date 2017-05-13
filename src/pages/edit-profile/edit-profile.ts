@@ -39,7 +39,7 @@ export class EditProfile {
     if (this.edit.value.name != '' && this.edit.value.password != ''){
       // POST edit
       // Success
-      this.user.name = this.edit.value.name;
+      //this.user.name = this.edit.value.name;
 
       // Save to local storage
       this.storage.set('user_login', this.user.nusp);
