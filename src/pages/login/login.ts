@@ -106,7 +106,7 @@ export class Login {
       this.http.post(url,body,options).map(res => res.json()).subscribe( data => {
         console.log('Success: '+ data.success);
 
-        if (!data.success) {
+        if (data.success) {
 
           this.user = new User (nusp, stud);
 
