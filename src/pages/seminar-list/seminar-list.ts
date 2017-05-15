@@ -75,7 +75,7 @@ export class SeminarList {
             console.log('New Seminar: ' + name);
             if (name == '') {
               this.toastCtrl.create({
-                message: 'Invalid parameter',
+                message: 'Error: Invalid parameter',
                 duration: 3000
               }).present();
 
@@ -96,14 +96,16 @@ export class SeminarList {
 
     this.http.post(url, body, {'Content-Type' : 'application/json'})
       .then(data => {
-        let obj = JSON.parse(data.data)
-        if (obj.success) {
+        let result = JSON.parse(data.data);
+        if (result.success) {
           console.log("Seminar created");
           this.getSeminarList();
-          this.toastCtrl.create({
-            message: '"' + name + '": successfully created',
-            duration: 3000
-          }).present();
+          let alert = this.alertCtrl.create({
+            title: 'Success',
+            subTitle: '"' + name + '": successfully created',
+            buttons: ['OK']
+          });
+          alert.present();
         }
         else {
           this.toastCtrl.create({

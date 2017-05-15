@@ -75,9 +75,9 @@ export class Signup {
       this.http.post(url, body, {'Content-Type': 'application/json'})
         .then(data => { 
 
-          var obj = JSON.parse(data.data);
-          console.log(obj);
-          if (obj.success) {
+          var result = JSON.parse(data.data);
+          console.log(result);
+          if (result.success) {
             this.user = new User (nusp, stud);
 
             // Save to local storage
