@@ -15,7 +15,8 @@
 
 
 <ion-content padding>
-<h1 text-center >Sign Up</h1>
+  <br />
+  <h1 text-center >Sign Up</h1>
 
   <form [formGroup]="signup">
     <ion-item>
@@ -35,7 +36,7 @@
         <ion-col>
           <ion-item>
             <ion-label>Student</ion-label>
-            <ion-radio checked="true" value="S" ></ion-radio>
+      <ion-radio checked="true" value="S" ></ion-radio>
           </ion-item>
         </ion-col>
         <ion-col>
@@ -47,7 +48,7 @@
       </ion-row>
     </ion-list>
   </form> 
-  <button class="my-button ion-button full" (click)="save()" color="primary">Register!</button>
-  <button ion-button full (click)="linktoLogin()" color="primary" clear >Already have an account? Log In</button>
+  <button ion-button block large (click)="save()" color="primary">Register!</button>
+  <button ion-button block (click)="linktoLogin()" color="primary" clear >Already have an account? Log In</button>
 
 </ion-content>

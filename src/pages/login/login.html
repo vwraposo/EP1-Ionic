@@ -14,6 +14,7 @@
 
 
 <ion-content padding>
+  <br >
   <h1 text-center >Login</h1>
 
   <form [formGroup]="login">
@@ -42,8 +43,8 @@
             </ion-row>
         </ion-list>
   </form>
-  <button class="my-button ion-button full" color="primary" (click)="save()">Log in</button>
+  <button ion-button block large color="primary" (click)="save()">Log in</button>
 
-  <button ion-button full color="primary" (click)="linktoSignup()" clear>Don't have an account? Sign up!</button>
+  <button ion-button block color="primary" (click)="linktoSignup()" clear>Don't have an account? Sign up!</button>
 
 </ion-content>
