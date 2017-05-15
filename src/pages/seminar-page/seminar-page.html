@@ -1,12 +1,18 @@
 <ion-header>
-
   <ion-navbar>
-    <button menuToggle *ngIf="!selectedSeminar">
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>Seminar Details</ion-title>
-  </ion-navbar>
+    <ion-toolbar>
+      <button menuToggle *ngIf="!selectedSeminar">
+        <ion-icon name="menu"></ion-icon>
+      </button>
+      <ion-title>Seminar Details</ion-title>
 
+      <ion-buttons end *ngIf="!user.is_student">
+        <button large ion-button icon-only color="royal" (click)="editSeminar()">
+          <ion-icon name="create"></ion-icon>
+        </button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 
 
@@ -19,18 +25,28 @@
   <br />
   <button ion-button *ngIf="user.is_student" color="secondary" outline>Outro Metodo</button>
   <br />
-  <button ion-button *ngIf="!user.is_student" color="primary" outline (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()" (click)="genQR()">QR Code</button>
+  <button ion-button *ngIf="!user.is_student" color="primary" block medium (click)="genQR()">QR Code</button>
+
   <br />
   <div align="center" *ngIf="clicked" >
     <qr-code [value]="''+selectedSeminar.id" [size]="150"></qr-code>
   </div>
   <br />
-  <button ion-button *ngIf="!user.is_student" color="danger" outline>Delete</button>
+  <button ion-button icon-left *ngIf="!user.is_student" color="danger" block medium (click)="deleteSeminar()">
+    <ion-icon name="trash"></ion-icon>
+    Delete
+  </button>
+  <br />
+  <button ion-button icon-left *ngIf="!user.is_student" color="secondary" block medium (click)="scanStudents()">
+    <ion-icon name="barcode"></ion-icon>
+    Scan Students
+  </button>
 
   <ion-list *ngIf="!user.is_student">
     <a ion-item *ngFor="let student of students">
-      {{student.id}} 
+      {{student.nusp}} 
     </a>
   </ion-list>
+
 
 </ion-content>
