@@ -5,11 +5,7 @@ import { Seminar } from '../../models/seminar'
 import { User } from '../../models/user'
 import { CurrentUser } from '../../providers/current-user'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
-
-
-
+import { HTTP } from '@ionic-native/HTTP';
 
 @Component({
   selector: 'page-seminar-page',
@@ -26,7 +22,7 @@ export class SeminarPage {
     public navParams: NavParams, 
     public currUser: CurrentUser,
     private barcodeScanner: BarcodeScanner,
-    public http: Http,
+    public http: HTTP,
     public toastCtrl: ToastController) {
 
     this.selectedSeminar = navParams.get('seminar');

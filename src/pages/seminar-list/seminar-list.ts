@@ -6,9 +6,8 @@ import { Seminar } from '../../models/seminar'
 import { User } from '../../models/user'
 
 import { CurrentUser } from '../../providers/current-user'
+import { HTTP } from '@ionic-native/http';
 
-import 'rxjs/add/operator/map';
-import { Http } from '@angular/http';
 
 @Component({
   selector: 'page-seminar-list',
@@ -27,7 +26,7 @@ export class SeminarList {
     public alertCtrl: AlertController,
     private toastCtrl: ToastController,
     private menu: MenuController,
-    private http: Http) {
+    private http: HTTP) {
 
     this.menu.enable(true, 'side_menu');
     
@@ -38,18 +37,18 @@ export class SeminarList {
     }
 
   getSeminarList() {
-    this.http.get('http://207.38.82.139:8001/seminar').map(res => res.json()).subscribe(
-        data => {
-            console.log('request success');
-            this.seminars = data.data;
-        },
-        err => {
-            console.log('request failed');
-            this.toastCtrl.create({
-                message: 'Request failed',
-                duration: 3000
-            }).present();
-        });
+    this.http.get('http://207.38.82.139:8001/seminar', {}, {})
+      .then(data => {
+        console.log('request success');
+        this.seminars = JSON.parse(data.data).data;
+      })
+      .catch(err => {
+        console.log('request failed');
+        this.toastCtrl.create({
+          message: 'Request failed',
+          duration: 3000
+        }).present();
+      });
   }
 
   addSeminar() {
@@ -82,10 +81,10 @@ export class SeminarList {
   }
 
 
-itemTapped(event, seminar) {
-  this.navCtrl.push(SeminarPage, 
-    { seminar: seminar, 
-    });
-}
+  itemTapped(event, seminar) {
+    this.navCtrl.push(SeminarPage, 
+      { seminar: seminar, 
+      });
+  }
 
 }

@@ -9,8 +9,7 @@ import { Signup } from '../signup/signup';
 import { User } from '../../models/user';
 import { SeminarList } from '../seminar-list/seminar-list';
 
-import { Http, Headers, RequestOptions } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { HTTP } from '@ionic-native/http';
 
 
 /**
@@ -37,7 +36,7 @@ export class Login {
     public toastCtrl: ToastController, 
     private menu: MenuController,
     private storage: Storage,
-    private http: Http) {
+    private http: HTTP) {
 
     this.menu.enable(false, 'side_menu');
 
@@ -91,49 +90,43 @@ export class Login {
 
       console.log("Target: "+url);
 
-      let myHeaders = new Headers();
-      myHeaders.append('Content-Type','application/json');
-
-      let options = new RequestOptions({headers: myHeaders});
-
-      let body = JSON.stringify({
+      let body = {
         nusp: nusp, 
         pass: pass,
-      });
+      };
 
       console.log(''+body);
 
-      this.http.post(url,body,options).map(res => res.json()).subscribe( data => {
-        console.log('Success: '+ data.success);
+      this.http.post(url, body, {'Content-Type': 'application/json'})
+        .then(data => {
+          var obj = JSON.parse(data.data)
+          console.log(obj);
+          if (obj.success) {
+            this.user = new User (nusp, stud);
 
-        if (!data.success) {
+            // Salva no Storage
+            this.storage.set('user_login', nusp);
+            this.storage.set('user_type', stud);
 
-          this.user = new User (nusp, stud);
-
-          // Salva no Storage
-          this.storage.set('user_login', nusp);
-          this.storage.set('user_type', stud);
-
-          // Usuario atual
-          this.currUser.setUser(this.user);
-          console.log (this.user);
+            // Usuario atual
+            this.currUser.setUser(this.user);
+            console.log (this.user);
 
 
-          this.navCtrl.push(SeminarList).
-            then(() => {
-              const index = this.viewCtrl.index;
-              this.navCtrl.remove(index);
-            });
-        } else {
-          console.log("invalid username/password");
-          this.toastCtrl.create({
-            message: 'Log in failed - invalid username/password',
-            duration: 3000
-          }).present();
-        }
+            this.navCtrl.push(SeminarList).
+              then(() => {
+                const index = this.viewCtrl.index;
+                this.navCtrl.remove(index);
+              });
+          } else {
+            console.log("invalid username/password");
+            this.toastCtrl.create({
+              message: 'Log in failed - invalid input',
+              duration: 3000
+            }).present();
+          }
 
-      },
-        err => {
+        }).catch(error => {
           console.log("Request failure");
           let toast = this.toastCtrl.create({
             message: 'Log in failed - No connection to server',
