@@ -3,7 +3,7 @@ import { NgModule, ErrorHandler } from '@angular/core';
 import { IonicApp, IonicModule, IonicErrorHandler } from 'ionic-angular';
 import { MyApp } from './app.component';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { HttpModule } from '@angular/http';
+import { HTTP } from '@ionic-native/http';
 import { QRCodeModule } from 'angular2-qrcode'; 
 
 import { Login } from '../pages/login/login';
@@ -29,7 +29,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   ],
   imports: [
     QRCodeModule,
-    HttpModule, 
     BrowserModule,
     IonicModule.forRoot(MyApp),
     IonicStorageModule.forRoot()
@@ -46,9 +45,10 @@ import { SplashScreen } from '@ionic-native/splash-screen';
   providers: [
     StatusBar,
     SplashScreen,
-    BarcodeScanner, 
     {provide: ErrorHandler, useClass: IonicErrorHandler}, 
     CurrentUser,
+    BarcodeScanner, 
+    HTTP,
   ]
 })
 export class AppModule {}
