@@ -5,7 +5,7 @@ import { Seminar } from '../../models/seminar'
 import { User } from '../../models/user'
 import { CurrentUser } from '../../providers/current-user'
 import { BarcodeScanner } from '@ionic-native/barcode-scanner';
-import { HTTP } from '@ionic-native/HTTP';
+import { HTTP } from '@ionic-native/http';
 
 @Component({
   selector: 'page-seminar-page',
