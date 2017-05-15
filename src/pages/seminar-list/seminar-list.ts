@@ -29,12 +29,12 @@ export class SeminarList {
     private http: HTTP) {
 
     this.menu.enable(true, 'side_menu');
-    
+
     this.user = this.currUser.getUser();
     console.log(this.user);
-    
+
     this.getSeminarList();
-    }
+  }
 
   getSeminarList() {
     this.http.get('http://207.38.82.139:8001/seminar', {}, {})
@@ -71,13 +71,54 @@ export class SeminarList {
         {
           text: 'Save',
           handler: data => {
-            console.log('New Seminar: ' + data.name );
-            this.seminars.push(new Seminar(22, "" + data.name));
+            let name = data.name;
+            console.log('New Seminar: ' + name);
+            if (name == '') {
+              this.toastCtrl.create({
+                message: 'Invalid parameter',
+                duration: 3000
+              }).present();
+
+            }
+            else {
+              this.POSTNewSeminar(name);
+            }
           }
         }
       ]
     });
     prompt.present();
+  }
+
+  POSTNewSeminar(name) {
+    let url = "http://207.38.82.139:8001/seminar/add";
+    let body = { name: name };
+
+    this.http.post(url, body, {'Content-Type' : 'application/json'})
+      .then(data => {
+        let obj = JSON.parse(data.data)
+        if (obj.success) {
+          console.log("Seminar created");
+          this.getSeminarList();
+          this.toastCtrl.create({
+            message: '"' + name + '": successfully created',
+            duration: 3000
+          }).present();
+        }
+        else {
+          this.toastCtrl.create({
+            message: 'Error: creation failed',
+            duration: 3000
+          }).present();
+        }
+      }).catch(error => {
+        console.log("Request failure");
+        let toast = this.toastCtrl.create({
+          message: 'Error: No connection to server',
+          duration: 3000
+        });
+        toast.present();
+      });
   }
 
 
