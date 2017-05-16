@@ -104,7 +104,6 @@ export class SeminarList {
         duration: 3000
       });
       toast.present();
-
     });
   }
 
@@ -142,7 +141,8 @@ export class SeminarList {
               });
               toast.present();
             });
-        } else { 
+        } 
+      }).catch(error => {
           console.log("Seminario invalido");
           let alert = this.alertCtrl.create({
             title: 'Failed',
@@ -150,59 +150,49 @@ export class SeminarList {
             buttons: ['OK']
           });
           alert.present();
+      });
+  }
+
+  POSTNewSeminar(name) {
+    let url = "http://207.38.82.139:8001/seminar/add";
+    let body = { name: name };
+
+    this.http.post(url, body, {'Content-Type' : 'application/json'})
+      .then(data => {
+        let result = JSON.parse(data.data);
+        if (result.success) {
+          console.log("Seminar created");
+          this.getSeminarList();
+          let alert = this.alertCtrl.create({
+            title: 'Success',
+            subTitle: '"' + name + '": successfully created',
+            buttons: ['OK']
+          });
+          alert.present();
+        }
+        else {
+          this.toastCtrl.create({
+            message: 'Error: creation failed',
+            duration: 3000
+          }).present();
         }
       }).catch(error => {
-          console.log("Request failure");
-          let toast = this.toastCtrl.create({
-            message: 'Error: No connection to server',
-            duration: 3000
-          });
-          toast.present();
+        console.log("Request failure");
+        let toast = this.toastCtrl.create({
+          message: 'Error: No connection to server',
+          duration: 3000
         });
-
-      }
-
-
-        POSTNewSeminar(name) {
-          let url = "http://207.38.82.139:8001/seminar/add";
-          let body = { name: name };
-
-          this.http.post(url, body, {'Content-Type' : 'application/json'})
-            .then(data => {
-              let result = JSON.parse(data.data);
-              if (result.success) {
-                console.log("Seminar created");
-                this.getSeminarList();
-                let alert = this.alertCtrl.create({
-                  title: 'Success',
-                  subTitle: '"' + name + '": successfully created',
-                  buttons: ['OK']
-                });
-                alert.present();
-              }
-              else {
-                this.toastCtrl.create({
-                  message: 'Error: creation failed',
-                  duration: 3000
-                }).present();
-              }
-            }).catch(error => {
-              console.log("Request failure");
-              let toast = this.toastCtrl.create({
-                message: 'Error: No connection to server',
-                duration: 3000
-              });
-              toast.present();
-            });
-        }
-
-
-        itemTapped(event, seminar) {
-          if (!this.user.is_student) {
-            this.navCtrl.push(SeminarPage, 
-              { seminar: seminar, 
-              });
-          }
-        }
-
+        toast.present();
+      });
   }
+
+
+  itemTapped(event, seminar) {
+    if (!this.user.is_student) {
+      this.navCtrl.push(SeminarPage, 
+        { seminar: seminar, 
+        });
+    }
+  }
+
+}

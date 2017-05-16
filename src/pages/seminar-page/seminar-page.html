@@ -21,10 +21,6 @@
     {{selectedSeminar.name}}
   </h3>
 
-  <button ion-button *ngIf="user.is_student" color="secondary" outline (click)="scanQR()">QR Code</button>
-  <br />
-  <button ion-button *ngIf="user.is_student" color="secondary" outline>Outro Metodo</button>
-  <br />
   <button ion-button *ngIf="!user.is_student" color="primary" block medium (click)="genQR()">QR Code</button>
 
   <br />

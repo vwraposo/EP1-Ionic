@@ -39,14 +39,20 @@ export class SeminarPage {
       this.clicked = true;
   }
 
-  scanQR() {
-    console.log("Scan QR");
+  scanStudents() {
+    console.log("Scan Students");
     this.barcodeScanner.scan().then((data) => {
-      // Success! Barcode data is here
-      console.log(data.text);
+      console.log(data.text.substring(1));
+      this.POSTEnroll(data.text.substring(1));
     }, (err) => {
-      // An error occurred
       console.log("Scanning failed: " + err);
+      let toast = this.toastCtrl.create({
+        message: 'Error: scanning failed',
+        duration: 3000
+      });
+      toast.present();
+
+
     });
   }
 
@@ -182,7 +188,6 @@ export class SeminarPage {
         });
         toast.present();
       });
-
   }
 
   setupStudentList() {
@@ -214,6 +219,52 @@ export class SeminarPage {
       });
   }
 
+  POSTEnroll(nusp) {
+    // Check if is seminar
+    this.http.get("http://207.38.82.139:8001/student/get/" + nusp, {}, {})
+      .then(data => {
+        if (JSON.parse(data.data).success) {
+          console.log("Aluno valido");
+          // Enroll
+          this.http.post("http://207.38.82.139:8001/attendence/submit", { nusp: nusp, seminar_id: this.selectedSeminar.id}, {'Content-Type':'application/json'})
+            .then(data => {
+              if (JSON.parse(data.data).success) {
+                this.students.push(new User(nusp, true));
+                let alert = this.alertCtrl.create({
+                  title: 'Success',
+                  subTitle: 'Student enrolled',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }
+              else {
+                let alert = this.alertCtrl.create({
+                  title: 'Failed',
+                  subTitle: 'Error, try again',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }
+            }).catch(error => {
+              let alert = this.alertCtrl.create({
+                title: 'Failed',
+                subTitle: 'Error, try again',
+                buttons: ['OK']
+              });
+              alert.present();
+            });
+        }
+      }).catch(error => {
+        console.log("Aluno invalido");
+        let alert = this.alertCtrl.create({
+          title: 'Failed',
+          subTitle: 'This is not a valid student.',
+          buttons: ['OK']
+        });
+        alert.present();
+      });
+
+  }
 
 
 }
