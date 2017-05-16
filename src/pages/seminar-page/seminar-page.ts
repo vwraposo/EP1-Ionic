@@ -14,7 +14,7 @@ import { HTTP } from '@ionic-native/http';
 export class SeminarPage {
   selectedSeminar: Seminar;
   user: User;
-  students: Array<User>;
+  students: Array<String>;
   clicked: Boolean;
 
   constructor(
@@ -196,26 +196,27 @@ export class SeminarPage {
 
     let body = { 
       seminar_id : this.selectedSeminar.id,
-    };
+    }
+    
+    this.students = [];
 
 
     this.http.post(url, body, {'Content-Type': 'application/json'})
       .then(data => {
         let result = JSON.parse(data.data);
         if (result.success) {
+          if (this.students[0] == "No students enrolled yet") this.students.pop();
           console.log('request success');
-          this.students = result.data.map(val => {
-            return new User(val.student_nusp, true);
-          });
+          for (let val of result.data) { 
+            let user =  new User(val.student_nusp, true);
+            this.addStudent(user);
+          }
 
         }
       })
       .catch(err => {
-        console.log('request failed');
-        this.toastCtrl.create({
-          message: 'Request failed',
-          duration: 3000
-        }).present();
+        console.log('empty');
+        this.students.push("No students enrolled yet");
       });
   }
 
@@ -223,13 +224,16 @@ export class SeminarPage {
     // Check if is seminar
     this.http.get("http://207.38.82.139:8001/student/get/" + nusp, {}, {})
       .then(data => {
+    console.log(JSON.parse(data.data).success);
         if (JSON.parse(data.data).success) {
           console.log("Aluno valido");
           // Enroll
           this.http.post("http://207.38.82.139:8001/attendence/submit", { nusp: nusp, seminar_id: this.selectedSeminar.id}, {'Content-Type':'application/json'})
             .then(data => {
               if (JSON.parse(data.data).success) {
-                this.students.push(new User(nusp, true));
+                console.log("Success");
+                if (this.students[0] == "No students enrolled yet") this.students.pop();
+                this.addStudent(new User(nusp, true));
                 let alert = this.alertCtrl.create({
                   title: 'Success',
                   subTitle: 'Student enrolled',
@@ -238,6 +242,7 @@ export class SeminarPage {
                 alert.present();
               }
               else {
+                console.log("Fail");
                 let alert = this.alertCtrl.create({
                   title: 'Failed',
                   subTitle: 'Error, try again',
@@ -253,12 +258,41 @@ export class SeminarPage {
               });
               alert.present();
             });
+        } else {
+          console.log("Aluno invalido");
+          let alert = this.alertCtrl.create({
+            title: 'Failed',
+            subTitle: 'This is not a valid student.',
+            buttons: ['OK']
+          });
+          alert.present();
+
         }
       }).catch(error => {
         console.log("Aluno invalido");
         let alert = this.alertCtrl.create({
           title: 'Failed',
           subTitle: 'This is not a valid student.',
+          buttons: ['OK']
+        });
+        alert.present();
+      });
+  }
+
+  addStudent(user) {
+    let url = "http://207.38.82.139:8001/" + (user.is_student ? "student" : "teacher") + "/get/" + user.nusp;
+
+    this.http.get(url, {}, {})
+      .then(data => {
+        let result = JSON.parse(data.data);
+        if (result.success) {
+          console.log("Success");
+          this.students.push(result.data.name);
+        }
+      }).catch(error => {
+        let alert = this.alertCtrl.create({
+          title: 'Failed',
+          subTitle: 'Error, try again',
           buttons: ['OK']
         });
         alert.present();
