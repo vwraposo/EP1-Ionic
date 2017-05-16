@@ -7,9 +7,12 @@
       </button>
       <ion-title>All Seminars</ion-title>
 
-      <ion-buttons end *ngIf="!user.is_student">
-        <button ion-button icon-only color="royal" (click)="addSeminar()">
+      <ion-buttons end>
+        <button *ngIf="!user.is_student" ion-button icon-only color="royal" (click)="addSeminar()">
           <ion-icon name="add"></ion-icon>
+        </button>
+        <button *ngIf="user.is_student" ion-button icon-only color="royal" (click)="scanQR()">
+          <ion-icon name="qr-scanner"></ion-icon>
         </button>
       </ion-buttons>
     </ion-toolbar>

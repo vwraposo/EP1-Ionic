@@ -7,6 +7,7 @@ import { User } from '../../models/user'
 
 import { CurrentUser } from '../../providers/current-user'
 import { HTTP } from '@ionic-native/http';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner';
 
 
 @Component({
@@ -26,7 +27,8 @@ export class SeminarList {
     public alertCtrl: AlertController,
     private toastCtrl: ToastController,
     private menu: MenuController,
-    private http: HTTP) {
+    private http: HTTP,
+    private barcodeScanner: BarcodeScanner,) {
 
     this.menu.enable(true, 'side_menu');
 
@@ -90,44 +92,117 @@ export class SeminarList {
     prompt.present();
   }
 
-  POSTNewSeminar(name) {
-    let url = "http://207.38.82.139:8001/seminar/add";
-    let body = { name: name };
+  scanQR() {
+    console.log("Scan QR");
+    this.barcodeScanner.scan().then((data) => {
+      console.log(data.text);
+      this.POSTEnroll(data.text);
+    }, (err) => {
+      console.log("Scanning failed: " + err);
+      let toast = this.toastCtrl.create({
+        message: 'Error: scanning failed',
+        duration: 3000
+      });
+      toast.present();
 
-    this.http.post(url, body, {'Content-Type' : 'application/json'})
+    });
+  }
+
+  POSTEnroll(seminar_id) {
+    // Check if is seminar
+    this.http.get("http://207.38.82.139:8001/seminar/get/" + seminar_id, {}, {})
       .then(data => {
-        let result = JSON.parse(data.data);
-        if (result.success) {
-          console.log("Seminar created");
-          this.getSeminarList();
+        if (JSON.parse(data.data).success) {
+          console.log("Seminario valido");
+          // Enroll
+          this.http.post("http://207.38.82.139:8001/attendence/submit", { nusp: this.user.nusp, seminar_id: seminar_id}, {'Content-Type':'application/json'})
+            .then(data => {
+              if (JSON.parse(data.data).success) {
+                let alert = this.alertCtrl.create({
+                  title: 'Success',
+                  subTitle: 'You are enrolled!',
+                  buttons: ['OK']
+                });
+                alert.present();
+
+              }
+              else {
+                let alert = this.alertCtrl.create({
+                  title: 'Failed',
+                  subTitle: 'Error, try again',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }
+            }).catch(error => {
+              console.log("Request failure");
+              let toast = this.toastCtrl.create({
+                message: 'Error: No connection to server',
+                duration: 3000
+              });
+              toast.present();
+            });
+        } else { 
+          console.log("Seminario invalido");
           let alert = this.alertCtrl.create({
-            title: 'Success',
-            subTitle: '"' + name + '": successfully created',
+            title: 'Failed',
+            subTitle: 'This is not a valid seminar.',
             buttons: ['OK']
           });
           alert.present();
         }
-        else {
-          this.toastCtrl.create({
-            message: 'Error: creation failed',
-            duration: 3000
-          }).present();
-        }
       }).catch(error => {
-        console.log("Request failure");
-        let toast = this.toastCtrl.create({
-          message: 'Error: No connection to server',
-          duration: 3000
+          console.log("Request failure");
+          let toast = this.toastCtrl.create({
+            message: 'Error: No connection to server',
+            duration: 3000
+          });
+          toast.present();
         });
-        toast.present();
-      });
+
+      }
+
+
+        POSTNewSeminar(name) {
+          let url = "http://207.38.82.139:8001/seminar/add";
+          let body = { name: name };
+
+          this.http.post(url, body, {'Content-Type' : 'application/json'})
+            .then(data => {
+              let result = JSON.parse(data.data);
+              if (result.success) {
+                console.log("Seminar created");
+                this.getSeminarList();
+                let alert = this.alertCtrl.create({
+                  title: 'Success',
+                  subTitle: '"' + name + '": successfully created',
+                  buttons: ['OK']
+                });
+                alert.present();
+              }
+              else {
+                this.toastCtrl.create({
+                  message: 'Error: creation failed',
+                  duration: 3000
+                }).present();
+              }
+            }).catch(error => {
+              console.log("Request failure");
+              let toast = this.toastCtrl.create({
+                message: 'Error: No connection to server',
+                duration: 3000
+              });
+              toast.present();
+            });
+        }
+
+
+        itemTapped(event, seminar) {
+          if (!this.user.is_student) {
+            this.navCtrl.push(SeminarPage, 
+              { seminar: seminar, 
+              });
+          }
+        }
+
   }
-
-
-  itemTapped(event, seminar) {
-    this.navCtrl.push(SeminarPage, 
-      { seminar: seminar, 
-      });
-  }
-
-}
