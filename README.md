@@ -4,7 +4,7 @@ Versão do aplicativo implementado com o framework Ionic 2.
  
 ### Grupo:
 * Victor Wichmann Raposo - 9298020
-* Joao
+* Joao Francisco Lino Daniel - 7578279
 
 ### Ambiente
 
