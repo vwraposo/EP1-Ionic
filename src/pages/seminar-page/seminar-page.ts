@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ToastController, IonicPage, NavController, NavParams } from 'ionic-angular';
+import { AlertController, ToastController, NavController, NavParams } from 'ionic-angular';
 
 import { Seminar } from '../../models/seminar'
 import { User } from '../../models/user'

@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { MenuController, ToastController, AlertController, NavController, NavParams } from 'ionic-angular';
 
 import { SeminarPage } from '../seminar-page/seminar-page'
-import { Seminar } from '../../models/seminar'
 import { User } from '../../models/user'
 
 import { CurrentUser } from '../../providers/current-user'
